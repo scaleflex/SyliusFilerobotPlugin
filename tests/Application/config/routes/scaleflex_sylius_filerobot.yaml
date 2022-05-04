@@ -1,0 +1,2 @@
+scaleflex_sylius_filerobot:
+  resource: "@ScaleflexSyliusFilerobotPlugin/Resources/config/routing.yaml"
