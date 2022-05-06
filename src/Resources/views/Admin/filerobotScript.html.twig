@@ -1,0 +1,93 @@
+<div class="ui large basic modal" id="filerobot-content">
+    <div id="filerobot-widget"></div>
+</div>
+
+{% block javascripts %}
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.scaleflex.it/plugins/filerobot-widget/1.0.105/filerobot-widget.min.css?func=proxy"/>
+    <script type="text/javascript"
+            src="https://cdn.scaleflex.it/plugins/filerobot-widget/1.0.105/filerobot-widget.min.js?func=proxy"></script>
+
+    <script>
+        $(document).ready(function() {
+            const container = 'fyjnhqim';
+            const templateId = 'SECU_C19B5A2656F645FAA4FFA40D40C6F599';
+            const uploadDir = '/magento';
+
+            const Filerobot = window.Filerobot;
+
+            if (container && templateId) {
+                const filerobot = Filerobot.Core({
+                    securityTemplateID: templateId,
+                    container: container
+                });
+
+                const Explorer = Filerobot.Explorer;
+                const XHRUpload = Filerobot.XHRUpload;
+                const ImageEditor = Filerobot.ImageEditor;
+                const Webcam = Filerobot.Webcam;
+
+                filerobot
+                    .use(Explorer, {
+                        config: {
+                            rootFolderPath: uploadDir ?? '/',
+                        },
+                        target: '#filerobot-widget',
+                        inline: true,
+                        width: '100%',
+                        height: 530,
+                        showDetailsView: true,
+                        locale: {
+                            strings: {
+                                export: 'Insert'
+                            }
+                        },
+                        resetAfterClose: true,
+                    })
+                    .use(XHRUpload)
+                    .use(ImageEditor, {
+                        cloudimageToken: templateId
+                    })
+                    .use(Webcam)
+                    .on('export', function (files, popupExportSuccessMsgFn, downloadFilesPackagedFn, downloadFileFn) {
+                        console.log(files)
+                        files.forEach((selected, key) => {
+                            let link = selected.link;
+
+                            let url = new URL(link);
+                            let width = selected.file.info.img_w;
+                            let height = selected.file.info.img_h;
+
+                            if (!link.includes('width=')) {
+                                link += ('&width=' + width);
+                            } else {
+                                width = url.searchParams.get("width");
+                            }
+
+                            if (!link.includes('height=')) {
+                                link += ('&height=' + height);
+                            } else {
+                                height = url.searchParams.get("height");
+                            }
+
+                            const thumbLink = link + '&width=200&height=200'
+
+                            $('[data-form-collection="add"]').trigger('click');
+                            let lastChild = $('[data-tab="media"]').find('[data-form-collection="item"]:last-child');
+                            lastChild.find('.filerobot-path input').val(link)
+                            lastChild.find('.filerobot-src').attr('src', thumbLink)
+                            lastChild.find('.filerobot-src').removeClass('hidden')
+                        })
+                        $('#filerobot-content').modal('hide');
+                        files = [];
+                        return false;
+                    });
+            }
+
+            $(".filerobot-trigger").click(function () {
+                window.currentFilerobotPosition = $(this).data('position');
+                $('#filerobot-content').modal('show');
+            });
+        })
+    </script>
+{% endblock %}

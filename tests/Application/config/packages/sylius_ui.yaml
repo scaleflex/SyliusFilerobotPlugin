@@ -1,0 +1,5 @@
+sylius_ui:
+  events:
+    sylius.admin.layout.javascripts:
+      blocks:
+        filerobot_script: '@ScaleflexSyliusFilerobotPlugin\Admin\filerobotScript.html.twig'

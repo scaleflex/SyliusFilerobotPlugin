@@ -1,0 +1,14 @@
+scaleflex_sylius_filerobot_admin_filerobot:
+  resource: |
+    alias: scaleflex_sylius_filerobot.filerobot
+    except: ['create', 'show', 'delete', 'bulk_delete']
+    section: admin
+    templates: "@SyliusAdmin\\Crud"
+    redirect: update
+    vars:
+        update:
+            subheader: scaleflex_sylius_filerobot.ui.title
+            templates:
+                form: "@ScaleflexSyliusFilerobotPlugin/Admin/Filerobot/_form.html.twig"
+                breadcrumb: "@ScaleflexSyliusFilerobotPlugin/Admin/Filerobot/_breadcrumb.html.twig"
+  type: sylius.resource

@@ -7,10 +7,10 @@ namespace Scaleflex\SyliusFilerobotPlugin\DependencyInjection;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Extension\Extension;
+use Sylius\Bundle\ResourceBundle\DependencyInjection\Extension\AbstractResourceExtension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
-final class ScaleflexSyliusFilerobotExtension extends Extension
+final class ScaleflexSyliusFilerobotExtension extends AbstractResourceExtension
 {
     /**
      * @psalm-suppress UnusedVariable
@@ -19,6 +19,8 @@ final class ScaleflexSyliusFilerobotExtension extends Extension
     {
         $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+
+        $this->registerResources('scaleflex_sylius_filerobot', $config['driver'], $config['resources'], $container);
 
         $loader->load('services.xml');
     }

@@ -2,6 +2,20 @@
 
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <!-- Put your services here -->
+          <service id="scaleflex_sylius_filerobot.listener.admin.menu_builder"
+                         class="Scaleflex\SyliusFilerobotPlugin\Menu\AdminMenuListener">
+              <argument type="service" id="doctrine"/>
+              <tag name="kernel.event_listener" event="sylius.menu.admin.main" method="addAdminMenuItems"/>
+          </service>
+          <service id="scaleflex_sylius_filerobot.form.type.filerobot"
+                   class="Scaleflex\SyliusFilerobotPlugin\Form\Type\FilerobotType">
+             <argument>%scaleflex_sylius_filerobot.model.filerobot.class%</argument>
+             <tag name="form.type"/>
+         </service>
+         <service id="scaleflex_sylius_filerobot.twig.imagine_filter"
+                  class="Scaleflex\SyliusFilerobotPlugin\Twig\FilerobotExtension">
+               <argument type="service" id="doctrine"/>
+               <tag name="twig.extension"/>
+         </service>
     </services>
 </container>

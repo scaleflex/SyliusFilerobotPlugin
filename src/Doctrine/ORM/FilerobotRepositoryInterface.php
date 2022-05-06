@@ -1,10 +1,9 @@
 <?php
 
 namespace Scaleflex\SyliusFilerobotPlugin\Doctrine\ORM;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
 
-use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
-
-class FilerobotRepository extends EntityRepository
+interface FilerobotRepositoryInterface extends RepositoryInterface
 {
     //
 }

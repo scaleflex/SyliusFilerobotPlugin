@@ -1,0 +1,16 @@
+scaleflex_sylius_filerobot:
+  ui:
+    title: Scaleflex Filerobot
+    edit_filerobot: Scaleflex Filerobot Config
+    file_manager: File Manager
+
+  form:
+    status: Activation
+    token: Token
+    template: Template ID
+    upload_dir: Upload Directory
+    help:
+      status: Enable/Disabled the plugin
+      token: Your Filerobot Token
+      template: Security template ID
+      upload_dir: Upload Directory, the directory where assets is stored
