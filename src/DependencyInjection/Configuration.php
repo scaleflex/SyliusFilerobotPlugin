@@ -32,6 +32,20 @@ final class Configuration implements ConfigurationInterface
             ->end()
         ;
 
+        $rootNode
+            ->children()
+                ->arrayNode('filters')
+                    ->useAttributeAsKey('name')
+                    ->arrayPrototype()
+                        ->children()
+                            ->integerNode('width')->isRequired()->end()
+                            ->integerNode('height')->isRequired()->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+
         $this->addResourcesSection($rootNode);
 
         return $treeBuilder;

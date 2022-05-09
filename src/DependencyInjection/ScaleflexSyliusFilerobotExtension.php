@@ -21,6 +21,7 @@ final class ScaleflexSyliusFilerobotExtension extends AbstractResourceExtension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
         $this->registerResources('scaleflex_sylius_filerobot', $config['driver'], $config['resources'], $container);
+        $container->setParameter('scaleflex_sylius_filerobot_plugin.filters', $config['filters'] ?? []);
 
         $loader->load('services.xml');
     }

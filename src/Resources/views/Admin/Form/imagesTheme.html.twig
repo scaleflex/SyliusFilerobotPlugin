@@ -84,7 +84,8 @@
             <img class="ui small bordered image" src="{{ form.vars.value.path }}&width=200&height=200" alt="{{ form.vars.value.type }}" />
         {% endif %}
         <img class="ui small bordered image filerobot-src hidden" src="#"/>
-        <div class="ui filerobot-path hidden">
+
+        <div style="visibility: hidden;display: none" class="ui filerobot-path ">
             {{ form_row(form.path) }}
         </div>
     {% endif %}

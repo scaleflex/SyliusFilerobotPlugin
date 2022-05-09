@@ -50,7 +50,6 @@
                     })
                     .use(Webcam)
                     .on('export', function (files, popupExportSuccessMsgFn, downloadFilesPackagedFn, downloadFileFn) {
-                        console.log(files)
                         files.forEach((selected, key) => {
                             let link = selected.link;
 

@@ -15,6 +15,7 @@
          <service id="scaleflex_sylius_filerobot.twig.imagine_filter"
                   class="Scaleflex\SyliusFilerobotPlugin\Twig\FilerobotExtension">
                <argument type="service" id="doctrine"/>
+               <argument type="service" id="parameter_bag"/>
                <tag name="twig.extension"/>
          </service>
     </services>
