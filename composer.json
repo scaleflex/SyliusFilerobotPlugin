@@ -1,10 +1,12 @@
 {
-    "name": "sylius/plugin-skeleton",
+    "name": "scaleflex/sylius-filerobot-plugin",
     "type": "sylius-plugin",
-    "description": "Acme example plugin for Sylius.",
+    "description": "Filerobot Digital Asset Management",
     "keywords": [
         "sylius",
-        "sylius-plugin"
+        "sylius-plugin",
+        "scaleflex",
+        "filerobot"
     ],
     "license": "MIT",
     "require": {
