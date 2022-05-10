@@ -32,6 +32,16 @@ return [
 ```shell
 bin/console doctrine:migration:diff
 bin/console doctrine:migration:migrate
+bin/console cache:clear
+```
+
+### Add Admin route
+Create file in ```config/routes/scaleflex_sylius_filerobot.yaml``` and add content bellow
+
+```yaml
+# config/routes/scaleflex_sylius_filerobot.yaml
+scaleflex_sylius_filerobot:
+  resource: "@ScaleflexSyliusFilerobotPlugin/Resources/config/routing.yaml"
 ```
 
 #### Update product media tab form
