@@ -36,7 +36,7 @@ bin/console doctrine:migration:migrate
 
 #### Update product media tab form
 Change form theme ```{% form_theme form '@ScaleflexSyliusFilerobotPlugin/Admin/Form/imagesTheme.html.twig' %}```
-in your ```templates/bundles/SyliusAdminBundle\Product\Tab\_media.html.twig```
+in your ```templates/bundles/SyliusAdminBundle/Product/Tab/_media.html.twig```
 
 ```html
 {% form_theme form '@ScaleflexSyliusFilerobotPlugin/Admin/Form/imagesTheme.html.twig' %}
