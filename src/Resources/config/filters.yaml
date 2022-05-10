@@ -8,3 +8,4 @@ scaleflex_sylius_filerobot:
     sylius_shop_product_small_thumbnail: { width: 150, height: 112 }
     sylius_shop_product_thumbnail: { width: 260, height: 260 }
     sylius_shop_product_large_thumbnail: { width: 550, height: 412 }
+    sylius_small: { width: 120, height: 120 }

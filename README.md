@@ -1,112 +1,207 @@
-<p align="center">
-    <a href="https://sylius.com" target="_blank">
-        <img src="https://demo.sylius.com/assets/shop/img/logo.png" />
-    </a>
-</p>
+# Installation
 
-<h1 align="center">Plugin Skeleton</h1>
+### Step 1: Download the plugin
+Open a command console, enter your project directory and execute the
+following command to download the latest stable version of this bundle:
 
-<p align="center">Skeleton for starting Sylius plugins.</p>
+```shell
+ composer require scaleflex/sylius-filerobot-plugin
+```
 
-## Documentation
+This command requires you to have Composer [installed globally](https://getcomposer.org/doc/00-intro.md), as explained in the installation
+chapter of the Composer documentation.
 
-For a comprehensive guide on Sylius Plugins development please go to Sylius documentation,
-there you will find the <a href="https://docs.sylius.com/en/latest/plugin-development-guide/index.html">Plugin Development Guide</a>, that is full of examples.
+### Step 2: Enable the plugin
+Then, enable the plugin by adding it to the list of registered
+plugins/bundles in config/bundles.php file of your project:
 
-## Quickstart Installation
+```injectablephp
+<?php
 
-1. Run `composer create-project sylius/plugin-skeleton ProjectName`.
+# config/bundles.php
 
-2. From the plugin skeleton root directory, run the following commands:
+return [
+    // ...
+    Scaleflex\SyliusFilerobotPlugin\ScaleflexSyliusFilerobotPlugin::class => ['all' => true],
+];
+```
 
-    ```bash
-    $ (cd tests/Application && yarn install)
-    $ (cd tests/Application && yarn build)
-    $ (cd tests/Application && APP_ENV=test bin/console assets:install public)
+### Step 3: Configure the plugin
+
+#### Update DB Schema
+```shell
+bin/console doctrine:migration:diff
+bin/console doctrine:migration:migrate
+```
+
+#### Update product media tab form
+Change form theme ```{% form_theme form '@ScaleflexSyliusFilerobotPlugin/Admin/Form/imagesTheme.html.twig' %}```
+in your ```templates/bundles/SyliusAdminBundle\Product\Tab\_media.html.twig```
+
+```html
+{% form_theme form '@ScaleflexSyliusFilerobotPlugin/Admin/Form/imagesTheme.html.twig' %}
+
+<div class="ui tab" data-tab="media">
+  <h3 class="ui top attached header">{{ 'sylius.ui.media'|trans }}</h3>
+
+  <div class="ui attached segment">
+    {{ form_row(form.images, {'label': false}) }}
+
+    {{ sylius_template_event(['sylius.admin.product.' ~ action ~ '.tab_media', 'sylius.admin.product.tab_media'], {'form': form}) }}
+  </div>
+</div>
+```
+#### Update product grid thumbnail
+Change grid thumbnail column template
+```yaml
+# config/package/_sylius.yaml
+
+sylius_grid:
+  grids:
+    sylius_admin_product:
+      fields:
+        image:
+          options:
+            template: "@ScaleflexSyliusFilerobotPlugin/Admin/Product/Grid/Field/image.html.twig"
+```
+#### Add script
+
+```yaml
+# config/package/sylius_ui.yaml
+
+sylius_ui:
+  events:
+    sylius.admin.layout.javascripts:
+      blocks:
+        filerobot_script: '@ScaleflexSyliusFilerobotPlugin\Admin\filerobotScript.html.twig'
+```
+
+#### Add config filter
+Create a file ```config/packages/scaleflex_filerobot.yaml``` and add content bellow
+```yaml
+imports:
+  - { resource: "@ScaleflexSyliusFilerobotPlugin/Resources/config/filters.yaml"}
+```
+#### Update config in Admin
+Goto **Scaleflex Filerobot** under **Configuration**
+<img src="./doc/img.png"/>
+
+You can only enable if token, security template id are correct
+
+- Activation: Enable/Disable Filerobot plugin
+- Filerobot Token: Your Filerobot token
+- Security Template Identifier: Your security template ID
+- Filerobot upload directory: Folder path to your asset, ie /magento
+
+#### Developer guide
+
+The Filerobot plugin provide some twig method, filter support developer
+
+- ```is_filerobot(image_path)```: Twig function check if image is filerobot
+- ```image_path|filerobot('sylius_shop_product_thumbnail')```: Twig Filter, with image size, you can add more filter
+in ```config/package/scaleflex_filerobot.yaml```
+
+    ```yaml
+    scaleflex_sylius_filerobot:
+      filters:
+        custom_size: { width: 120, height: 120 }
     
-    $ (cd tests/Application && APP_ENV=test bin/console doctrine:database:create)
-    $ (cd tests/Application && APP_ENV=test bin/console doctrine:schema:create)
+    ```
+    and in Twig
+    ```html
+    image_path|filerobot('custom_size')
+    ```
+    
+    We have some default size follow Sylius default, you can override it in filter config above
+    
+    ```yaml
+    scaleflex_sylius_filerobot:
+      filters:
+        sylius_admin_product_large_thumbnail: { width: 550, height: 412 }
+        sylius_admin_product_small_thumbnail: { width: 150, height: 112 }
+        sylius_admin_product_tiny_thumbnail: { width: 64, height: 64 }
+        sylius_admin_product_thumbnail: { width: 50, height: 50 }
+        sylius_shop_product_tiny_thumbnail: { width: 64, height: 64 }
+        sylius_shop_product_small_thumbnail: { width: 150, height: 112 }
+        sylius_shop_product_thumbnail: { width: 260, height: 260 }
+        sylius_shop_product_large_thumbnail: { width: 550, height: 412 }
+        sylius_small: { width: 120, height: 120 }
+    
     ```
 
-To be able to setup a plugin's database, remember to configure you database credentials in `tests/Application/.env` and `tests/Application/.env.test`.
+- If you use Scaleflex Filerobot on existing File you have to check the path is filerobot or not, if not use the default way
+#### Example with Sylius default
 
-## Usage
+- ```templates/bundles/SyliusShopBundle/Product/_mainImage.html.twig```
+```html
+{% if product.imagesByType('thumbnail') is not empty %}
+    {% if is_filerobot(product.imagesByType('thumbnail').first.path) %}
+        {% set path = product.imagesByType('thumbnail').first.path|filerobot('sylius_shop_product_thumbnail') %}
+    {% else %}
+        {% set path = product.imagesByType('thumbnail').first.path|imagine_filter(filter|default('sylius_shop_product_thumbnail')) %}
+    {% endif %}
+{% elseif product.images.first %}
+    {% if is_filerobot(product.images.first.path) %}
+        {% set path = product.images.first.path|filerobot('sylius_shop_product_thumbnail') %}
+    {% else %}
+        {% set path = product.images.first.path|imagine_filter(filter|default('sylius_shop_product_thumbnail')) %}
+    {% endif %}
+{% else %}
+    {% set path = asset('assets/shop/img/200x200.png') %}
+{% endif %}
 
-### Running plugin tests
+<img src="{{ path }}" {{ sylius_test_html_attribute('main-image') }} alt="{{ product.name }}" class="ui bordered image" />
 
-  - PHPUnit
+```
 
-    ```bash
-    vendor/bin/phpunit
-    ```
+- ```templates/bundles/SyliusShopBundle/Product/Show/_mainImage.html.twig```
 
-  - PHPSpec
+```html
+{% if product.imagesByType('main') is not empty %}
+    {% set source_path = product.imagesByType('main').first.path %}
+    {% if not is_filerobot(source_path) %}
+        {% set original_path = source_path|imagine_filter('sylius_shop_product_original') %}
+        {% set path = source_path|imagine_filter(filter|default('sylius_shop_product_large_thumbnail')) %}
+    {% else %}
+        {% set original_path = source_path|filerobot('sylius_shop_product_original') %}
+        {% set path = source_path|filerobot('sylius_shop_product_large_thumbnail') %}
+    {% endif %}
+{% elseif product.images.first %}
+    {% set source_path = product.images.first.path %}
+    {% if not is_filerobot(source_path) %}
+        {% set original_path = source_path|imagine_filter('sylius_shop_product_original') %}
+        {% set path = source_path|imagine_filter(filter|default('sylius_shop_product_large_thumbnail')) %}
+    {% else %}
+        {% set original_path = source_path|filerobot('sylius_shop_product_original') %}
+        {% set path = source_path|filerobot('sylius_shop_product_large_thumbnail') %}
+    {% endif %}
+{% else %}
+    {% set original_path = asset('assets/shop/img/400x300.png') %}
+    {% set path = original_path %}
+{% endif %}
 
-    ```bash
-    vendor/bin/phpspec run
-    ```
+<div data-product-image="{{ path }}" data-product-link="{{ original_path }}"></div>
+<a href="{{ original_path }}" class="ui fluid image" data-lightbox="sylius-product-image">
+    <img src="{{ path }}" id="main-image" alt="{{ product.name }}" {{ sylius_test_html_attribute('main-image') }} />
+</a>
+{% if product.images|length > 1 %}
+<div class="ui divider"></div>
 
-  - Behat (non-JS scenarios)
+{{ sylius_template_event('sylius.shop.product.show.before_thumbnails', {'product': product}) }}
 
-    ```bash
-    vendor/bin/behat --strict --tags="~@javascript"
-    ```
+<div class="ui small images">
+    {% for image in product.images %}
+    {% set path = image.path is not null ? (is_filerobot(image.path) ? image.path|filerobot('sylius_shop_product_small_thumbnail') : image.path|imagine_filter('sylius_shop_product_small_thumbnail')) : asset('assets/shop/img/200x200.png') %}
+    <div class="ui image">
+    {% if product.isConfigurable() and product.enabledVariants|length > 0 %}
+        {% include '@SyliusShop/Product/Show/_imageVariants.html.twig' %}
+    {% endif %}
+        <a href="{{ is_filerobot(image.path) ? image.path|filerobot('sylius_shop_product_original') : image.path|imagine_filter('sylius_shop_product_original') }}" data-lightbox="sylius-product-image">
+            <img src="{{ path }}" data-large-thumbnail="{{ is_filerobot(image.path) ? image.path|filerobot('sylius_shop_product_large_thumbnail') : image.path|imagine_filter('sylius_shop_product_large_thumbnail') }}" alt="{{ product.name }}" />
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
 
-  - Behat (JS scenarios)
- 
-    1. [Install Symfony CLI command](https://symfony.com/download).
- 
-    2. Start Headless Chrome:
-    
-      ```bash
-      google-chrome-stable --enable-automation --disable-background-networking --no-default-browser-check --no-first-run --disable-popup-blocking --disable-default-apps --allow-insecure-localhost --disable-translate --disable-extensions --no-sandbox --enable-features=Metal --headless --remote-debugging-port=9222 --window-size=2880,1800 --proxy-server='direct://' --proxy-bypass-list='*' http://127.0.0.1
-      ```
-    
-    3. Install SSL certificates (only once needed) and run test application's webserver on `127.0.0.1:8080`:
-    
-      ```bash
-      symfony server:ca:install
-      APP_ENV=test symfony server:start --port=8080 --dir=tests/Application/public --daemon
-      ```
-    
-    4. Run Behat:
-    
-      ```bash
-      vendor/bin/behat --strict --tags="@javascript"
-      ```
-    
-  - Static Analysis
-  
-    - Psalm
-    
-      ```bash
-      vendor/bin/psalm
-      ```
-      
-    - PHPStan
-    
-      ```bash
-      vendor/bin/phpstan analyse -c phpstan.neon -l max src/  
-      ```
-
-  - Coding Standard
-  
-    ```bash
-    vendor/bin/ecs check src
-    ```
-
-### Opening Sylius with your plugin
-
-- Using `test` environment:
-
-    ```bash
-    (cd tests/Application && APP_ENV=test bin/console sylius:fixtures:load)
-    (cd tests/Application && APP_ENV=test bin/console server:run -d public)
-    ```
-    
-- Using `dev` environment:
-
-    ```bash
-    (cd tests/Application && APP_ENV=dev bin/console sylius:fixtures:load)
-    (cd tests/Application && APP_ENV=dev bin/console server:run -d public)
-    ```
+```

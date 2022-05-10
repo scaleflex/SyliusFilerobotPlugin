@@ -18,5 +18,13 @@
                <argument type="service" id="parameter_bag"/>
                <tag name="twig.extension"/>
          </service>
+
+         <service id="scaleflex_sylius_filerobot.listener.filerobot"
+                  class="Scaleflex\SyliusFilerobotPlugin\EventListener\FilerobotUpdateListener">
+                  <argument type="service" id="sylius.http_client"/>
+                  <argument type="service" id="translator"/>
+                  <tag name="kernel.event_listener"
+                        event="scaleflex_sylius_filerobot.filerobot.pre_update" method="onFilerobotUpdate" />
+         </service>
     </services>
 </container>

@@ -14,3 +14,5 @@ scaleflex_sylius_filerobot:
       token: Your Filerobot Token
       template: Security template ID
       upload_dir: Upload Directory, the directory where assets is stored
+  event:
+    wrong_credential: Your Filerobot credential is not correct, please try again
