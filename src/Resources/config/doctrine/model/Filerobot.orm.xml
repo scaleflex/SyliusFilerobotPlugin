@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                      http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <mapped-superclass name="Scaleflex\SyliusFilerobotPlugin\Model\Filerobot" table="scaleflex_filerobot">
+        <id name="id" column="id" type="integer">
+            <generator strategy="AUTO" />
+        </id>
+        <field name="status"        type="boolean"    nullable="true" default="0"  />
+        <field name="token"         type="string"  nullable="true" />
+        <field name="templateId"    type="string"  nullable="true" />
+        <field name="uploadDir"     type="string"  nullable="true" />
+    </mapped-superclass>
+
+</doctrine-mapping>

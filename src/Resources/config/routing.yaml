@@ -1,0 +1,3 @@
+scaleflex_sylius_filerobot_admin:
+  resource: "@ScaleflexSyliusFilerobotPlugin/Resources/config/routing/admin.yaml"
+  prefix: /admin

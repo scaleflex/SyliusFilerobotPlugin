@@ -1,0 +1,17 @@
+{{ form_errors(form) }}
+<div class="ui">
+    {{ form_row(form.status) }}
+    {{ form_row(form.token) }}
+    {{ form_row(form.templateId) }}
+    {{ form_row(form.uploadDir) }}
+</div>
+
+<style>
+    .ui.buttons > a{
+        display:none;
+    }
+
+    .ui.buttons .button:first-child{
+        border-radius: .28571429rem;
+    }
+</style>
