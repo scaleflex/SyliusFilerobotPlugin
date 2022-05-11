@@ -12,7 +12,7 @@
         <field name="status"        type="boolean"    nullable="true" default="0"  />
         <field name="token"         type="string"  nullable="true" />
         <field name="templateId"    type="string"  nullable="true" />
-        <field name="uploadDir"     type="string"  nullable="true" />
+        <field name="uploadDir"     type="string"  nullable="true" default="/" />
     </mapped-superclass>
 
 </doctrine-mapping>

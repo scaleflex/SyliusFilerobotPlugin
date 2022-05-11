@@ -1,18 +1,18 @@
 scaleflex_sylius_filerobot:
   ui:
-    title: Scaleflex Filerobot
-    edit_filerobot: Scaleflex Filerobot Config
+    title: Filerobot by Scaleflex
+    edit_filerobot: Scaleflex Filerobot Configuration
     file_manager: File Manager
 
   form:
     status: Activation
     token: Token
     template: Template ID
-    upload_dir: Upload Directory
+    upload_dir: Root upload directory
     help:
       status: Enable/Disabled the plugin
       token: Your Filerobot Token
-      template: Security template ID
-      upload_dir: Upload Directory, the directory where assets is stored
+      template: Security template
+      upload_dir: Default upload directory, the directory where assets are stored
   event:
     wrong_credential: Your Filerobot credential is not correct, please try again
