@@ -20,15 +20,21 @@ final class FilerobotUpdateListener
         /** @var Filerobot $filerobotConfig */
         $filerobotConfig = $event->getSubject();
 
+        $currentStatus = $filerobotConfig->isStatus();
+        $filerobotConfig->setStatus(false);
+
         if (!empty($filerobotConfig->getToken()) &&
             !empty($filerobotConfig->getTemplateId())) {
             try {
-                $this->httpClient->request(
+                $response = $this->httpClient->request(
                     'GET',
                     'https://api.filerobot.com/' . $filerobotConfig->getToken() . '/key/' . $filerobotConfig->getTemplateId()
                 );
+
+                if ($response->getStatusCode() === 200) {
+                   $filerobotConfig->setStatus($currentStatus);
+                }
             } catch (ClientException $exception) {
-                $filerobotConfig->setStatus(false);
                 $event->stop($this->translator->trans('scaleflex_sylius_filerobot.event.wrong_credential'));
             }
         }

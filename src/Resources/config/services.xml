@@ -26,5 +26,10 @@
                   <tag name="kernel.event_listener"
                         event="scaleflex_sylius_filerobot.filerobot.pre_update" method="onFilerobotUpdate" />
          </service>
+
+         <service id="scaleflex_sylius_filerobot.form.extension.type.product_image"
+                  class="Scaleflex\SyliusFilerobotPlugin\Form\Extension\ProductImageTypeExtension">
+              <tag name="form.type_extension" extended_type="Sylius\Bundle\CoreBundle\Form\Type\Product\ProductImageType"/>
+         </service>
     </services>
 </container>
