@@ -1,2 +1,0 @@
-imports:
-  - { resource: "@ScaleflexSyliusFilerobotPlugin/Resources/config/filters.yaml"}
