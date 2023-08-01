@@ -41,7 +41,7 @@ class FilerobotExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new TwigFilter('filerobot', [$this, 'filterImage'])
+            new TwigFilter('filerobot', [$this, 'filterImage']),
         ];
     }
 
@@ -52,6 +52,7 @@ class FilerobotExtension extends AbstractExtension
     {
         return [
             new TwigFunction('filerobot_status', [$this, 'checkFilerobotStatus']),
+            new TwigFunction('filerobot_config', [$this, 'getFilerobotConfig']),
             new TwigFunction('is_filerobot', [$this, 'checkIsFilerobot'])
         ];
     }
@@ -101,6 +102,18 @@ class FilerobotExtension extends AbstractExtension
         }
 
         return false;
+    }
+
+    /**
+     * @param string $configName
+     * @return string
+     */
+    public function getFilerobotConfig(string $configName)
+    {
+        /** @var Filerobot $config */
+        $config = $this->filerobotRepository->findOneBy([]);
+
+        return $config->$configName();
     }
 
     /**
