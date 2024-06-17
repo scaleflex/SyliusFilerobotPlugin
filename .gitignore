@@ -12,3 +12,7 @@
 /behat.yml
 /phpspec.yml
 /phpunit.xml
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###
